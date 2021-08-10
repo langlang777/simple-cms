@@ -1,8 +1,23 @@
-import { createStore } from "vuex";
+import { createStore } from 'vuex'
+import { IRootstate } from './roottype'
+import login from './login/login'
 
-export default createStore({
-  state: {},
+const store = createStore<IRootstate>({
+  state() {
+    return {
+      name: 'lang',
+      age: 18
+    }
+  },
   mutations: {},
   actions: {},
-  modules: {},
-});
+  modules: {
+    login
+  }
+})
+
+export function setupStore() {
+  store.dispatch('login/loadLoaclLogin')
+}
+
+export default store
