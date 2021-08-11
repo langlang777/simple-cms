@@ -10,7 +10,7 @@ import {
   requestUserInfoById,
   requestUserMenusByRoleId
 } from '@/service/login/login'
-
+import { mapMenusToRoutes } from '@/utils/map-menus'
 // <模块类型，根组件类型>
 const loginMoudle: Module<IloginState, IRootstate> = {
   namespaced: true,
@@ -31,6 +31,10 @@ const loginMoudle: Module<IloginState, IRootstate> = {
     },
     changeUserMenus(state, userMenus: any) {
       state.userMenus = userMenus
+
+      //userMenus => routes
+      mapMenusToRoutes(userMenus)
+      //将routes => router.main.children
     }
   },
   actions: {
