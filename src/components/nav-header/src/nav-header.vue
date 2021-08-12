@@ -5,13 +5,21 @@
       :class="isFold ? 'el-icon-s-fold' : 'el-icon-s-unfold'"
       @click="handleFoldClick"
     ></i>
+    <div class="content">
+      <div>面包屑</div>
+      <user-info></user-info>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import UserInfo from './user-info.vue'
 
 export default defineComponent({
+  components: {
+    UserInfo
+  },
   emits: ['foldChange'], // 定义事件
   setup(props, { emit }) {
     const isFold = ref(false)
@@ -29,9 +37,18 @@ export default defineComponent({
 
 <style scoped lang="less">
 .nav-header {
+  display: flex;
+  width: 100%;
   .fold-menu {
     font-size: 30px;
     cursor: pointer;
+  }
+  .content {
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+    align-items: center;
+    padding: 0 20px;
   }
 }
 </style>

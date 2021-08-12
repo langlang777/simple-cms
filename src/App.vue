@@ -1,6 +1,7 @@
 <template>
-  <div></div>
-  <router-view />
+  <div class="app">
+    <router-view />
+  </div>
 </template>
 
 <script lang="ts">

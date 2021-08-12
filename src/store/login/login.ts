@@ -33,8 +33,14 @@ const loginMoudle: Module<IloginState, IRootstate> = {
       state.userMenus = userMenus
 
       //userMenus => routes
-      mapMenusToRoutes(userMenus)
+      const routes = mapMenusToRoutes(userMenus)
+      // console.log(routes)
+
       //将routes => router.main.children
+      routes.forEach((route) => {
+        // 这个方法会 找到 name 为 main 的路由 然后添加到他的 children
+        router.addRoute('Main', route)
+      })
     }
   },
   actions: {

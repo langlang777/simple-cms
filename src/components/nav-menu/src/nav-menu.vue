@@ -23,7 +23,10 @@
             </template>
             <!-- 遍历展开里面的菜单 -->
             <template v-for="subitem in item.children" :key="subitem.id">
-              <el-menu-item :index="subitem.id + ''">
+              <el-menu-item
+                :index="subitem.id + ''"
+                @click="handleMenuItemClick(subitem)"
+              >
                 <i v-if="subitem.icon" :class="subitem.icon"></i>
                 <span>{{ subitem.name }}</span>
               </el-menu-item>
@@ -46,7 +49,7 @@
 import { defineComponent, computed } from 'vue'
 // import {useStore} from 'Vuex'
 import { useStore } from '@/store' // 通过直接自己定义返回有类型的 useStore
-
+import { useRouter } from 'vue-router'
 export default defineComponent({
   props: {
     collapse: {
@@ -56,10 +59,18 @@ export default defineComponent({
     }
   },
   setup() {
+    const router = useRouter()
     const store = useStore()
+
     const userMenus = computed(() => store.state.login.userMenus)
+    const handleMenuItemClick = (item: any) => {
+      router.push({
+        path: item.url ?? '/not-fount'
+      })
+    }
     return {
-      userMenus
+      userMenus,
+      handleMenuItemClick
     }
   }
 })
