@@ -1,5 +1,8 @@
 <template>
   <div class="hy-form">
+    <div class="header">
+      <slot name="header"></slot>
+    </div>
     <el-form :label-width="labelWidth">
       <el-row>
         <template v-for="item in formItems" :key="item.label">
@@ -16,6 +19,7 @@
                   :placeholder="item.placeholder"
                   v-bind="item.otherOptions"
                   :show-password="item.type === 'password'"
+                  v-model="formDate[`${item.field}`]"
                 />
               </template>
               <template v-else-if="item.type === 'select'">
@@ -23,6 +27,7 @@
                   :placeholder="item.placeholder"
                   v-bind="item.otherOptions"
                   style="width: 100%"
+                  v-model="formDate[`${item.field}`]"
                 >
                   <el-option
                     v-for="option in item.options"
@@ -36,6 +41,7 @@
                 <el-date-picker
                   style="width: 100%"
                   v-bind="item.otherOptions"
+                  v-model="formDate[`${item.field}`]"
                 ></el-date-picker>
               </template>
             </el-form-item>
@@ -43,15 +49,24 @@
         </template>
       </el-row>
     </el-form>
+    <div class="footer">
+      <slot name="footer"></slot>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, ref, watch } from 'vue'
 import { IFormItem } from '../types'
 
 export default defineComponent({
   props: {
+    // 在使用 v-model绑定组件时 会传过来一个 modelValue
+    // modelValue 这个相当于 v-model = 'XXXX' 里面的 XXX
+    modelValue: {
+      type: Object,
+      required: true
+    },
     formItems: {
       type: Array as PropType<IFormItem[]>,
       default: () => []
@@ -75,8 +90,15 @@ export default defineComponent({
       })
     }
   },
-  setup() {
-    return {}
+  emits: ['update:modelValue'], // 在v-model 绑定组件时 会自动监听这个事件
+  setup(props, { emit }) {
+    //通过 {...XXX} 结构在包裹 复制一份 避免直接修改 pops
+    const formDate = ref({ ...props.modelValue })
+    // formDate 这个改变时 发射这个事件 告诉 父组件 数据改变 将newvalue 传出
+    watch(formDate, (newValue) => emit('update:modelValue', newValue), {
+      deep: true
+    })
+    return { formDate }
   }
 })
 </script>

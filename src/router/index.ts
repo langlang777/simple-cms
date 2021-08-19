@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import localCache from '@/utils/cache'
+import { firstMenu } from '@/utils/map-menus'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -33,8 +34,11 @@ router.beforeEach((to) => {
     // 如果没有 token 跳到 登录页面
     const token = localCache.getCache('token')
     if (!token) {
-      return '/login'
+      return '/login' // return 就是跳转到XXX
     }
+  }
+  if (to.path === '/main') {
+    return firstMenu.url
   }
 })
 export default router

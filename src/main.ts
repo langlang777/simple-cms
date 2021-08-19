@@ -13,8 +13,8 @@ const app = createApp(App)
 // 注册element-plus组件
 registerApp(app) // app.use(registerApp) 和这个用法一样
 // app.use(function(app)) 会自动传入 app对象
-app.use(store).use(router).mount('#app')
 setupStore()
+app.use(store).use(router).mount('#app')
 
 // interface DataType {
 //   data: any

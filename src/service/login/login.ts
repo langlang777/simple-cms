@@ -1,5 +1,6 @@
 import wlRequest from '../index' //拿到创建的网络请求实例
-import { IAccount, ILoginResult, IDataType } from './type'
+import { IAccount, ILoginResult } from './type'
+import { IDataType } from '@/service/type'
 
 // 定义一个枚举
 enum LoginAPI {
