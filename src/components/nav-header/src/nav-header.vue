@@ -42,6 +42,7 @@ export default defineComponent({
   .fold-menu {
     font-size: 30px;
     cursor: pointer;
+    margin-top: 5px;
   }
   .content {
     display: flex;
