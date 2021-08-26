@@ -11,6 +11,7 @@
               :label="item.label"
               :rules="item.rules"
               :style="itemStyle"
+              v-if="!item.isHidden"
             >
               <template
                 v-if="item.type === 'input' || item.type === 'password'"
@@ -19,7 +20,8 @@
                   :placeholder="item.placeholder"
                   v-bind="item.otherOptions"
                   :show-password="item.type === 'password'"
-                  v-model="formDate[`${item.field}`]"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:model-value="handleValueChange($event, item.field)"
                 />
               </template>
               <template v-else-if="item.type === 'select'">
@@ -27,7 +29,8 @@
                   :placeholder="item.placeholder"
                   v-bind="item.otherOptions"
                   style="width: 100%"
-                  v-model="formDate[`${item.field}`]"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:model-value="handleValueChange($event, item.field)"
                 >
                   <el-option
                     v-for="option in item.options"
@@ -41,7 +44,8 @@
                 <el-date-picker
                   style="width: 100%"
                   v-bind="item.otherOptions"
-                  v-model="formDate[`${item.field}`]"
+                  :model-value="modelValue[`${item.field}`]"
+                  @update:model-value="handleValueChange($event, item.field)"
                 ></el-date-picker>
               </template>
             </el-form-item>
@@ -92,13 +96,20 @@ export default defineComponent({
   },
   emits: ['update:modelValue'], // 在v-model 绑定组件时 会自动监听这个事件
   setup(props, { emit }) {
-    //通过 {...XXX} 结构在包裹 复制一份 避免直接修改 pops
-    const formDate = ref({ ...props.modelValue })
-    // formDate 这个改变时 发射这个事件 告诉 父组件 数据改变 将newvalue 传出
-    watch(formDate, (newValue) => emit('update:modelValue', newValue), {
-      deep: true
-    })
-    return { formDate }
+    // //通过 {...XXX} 结构在包裹 复制一份 避免直接修改 pops
+    // const formDate = ref({ ...props.modelValue })
+    // // formDate 这个改变时 发射这个事件 告诉 父组件 数据改变 将newvalue 传出
+    // watch(formDate, (newValue) => emit('update:modelValue', newValue), {
+    //   deep: true
+    // })
+    const handleValueChange = (value: any, field: string) => {
+      emit('update:modelValue', { ...props.modelValue, [field]: value })
+    }
+
+    return {
+      //  formDate
+      handleValueChange
+    }
   }
 })
 </script>

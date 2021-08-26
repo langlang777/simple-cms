@@ -13,7 +13,12 @@
           <el-button icon="el-icon-refresh" @click="handleResetClick"
             >重置</el-button
           >
-          <el-button type="primary" icon="el-icon-search">搜索</el-button>
+          <el-button
+            type="primary"
+            icon="el-icon-search"
+            @click="handleQueryClick"
+            >搜索</el-button
+          >
         </div>
       </template>
     </hy-form>
@@ -34,7 +39,8 @@ export default defineComponent({
   components: {
     HyForm
   },
-  setup(props) {
+  emits: ['resetBtnClick', 'queryBtnClick'],
+  setup(props, { emit }) {
     // formData 应该由 配置决定
     const formItems = props.searchFormConfig?.formItems ?? []
     const formOrginData: any = {}
@@ -45,12 +51,21 @@ export default defineComponent({
 
     // 用户点击重置
     const handleResetClick = () => {
+      // for (const key in formOrginData) {
+      //   formData.value[`${key}`] = formOrginData[key]
+      // }
       formData.value = formOrginData
+      emit('resetBtnClick')
+    }
+    // 用户点击搜索
+    const handleQueryClick = () => {
+      emit('queryBtnClick', formData.value)
     }
 
     return {
       formData,
-      handleResetClick
+      handleResetClick,
+      handleQueryClick
     }
   }
 })

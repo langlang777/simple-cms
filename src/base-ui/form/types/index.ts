@@ -8,6 +8,7 @@ export interface IFormItem {
   placeholder?: any
   options?: any[] // 针对select
   otherOptions?: any // 针对 特殊属性
+  isHidden?: boolean
 }
 
 export interface IForm {

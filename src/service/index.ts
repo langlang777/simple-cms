@@ -10,9 +10,10 @@ const wlRequest = new WLRequest({
     // 传入拦截器
     requestInterceptors: (config) => {
       // 拦截 添加  token
-      const token = localCache.getCache('token') ?? ''
+      const token = localCache.getCache('token')
       if (token) {
         config.headers.Authorization = `Bearer ${token}`
+        console.log(token)
       }
       //拦截器必须 return 不然就直接拦断了
       return config

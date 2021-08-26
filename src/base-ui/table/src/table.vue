@@ -13,6 +13,7 @@
       border
       style="width: 100%"
       @selection-change="selectChange"
+      v-bind="childrenProps"
     >
       <el-table-column
         v-if="showSelectColumn"
@@ -28,7 +29,7 @@
         label="序号"
       ></el-table-column>
       <template v-for="propItem in titleList" :key="propItem.prop">
-        <el-table-column v-bind="propItem" align="center">
+        <el-table-column v-bind="propItem" align="center" show-overflow-tooltip>
           <template #default="scope">
             <!-- :data(名字随便取) 可以将 数据传出去 -->
             <slot :name="propItem.slotName" :data="scope.row">
@@ -39,16 +40,16 @@
       </template>
     </el-table>
   </div>
-  <div class="footer">
+  <div class="footer" v-if="showFooter">
     <slot name="footer">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage4"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
+        :current-page="page.currentPage"
+        :page-sizes="[10, 20, 30]"
+        :page-size="page.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400"
+        :total="dataCount"
       >
       </el-pagination>
     </slot>
@@ -72,6 +73,10 @@ export default defineComponent({
       type: Array,
       required: true
     },
+    dataCount: {
+      type: Number,
+      default: 0
+    },
     showIndexColumn: {
       type: Boolean,
       default: false
@@ -79,9 +84,21 @@ export default defineComponent({
     showSelectColumn: {
       type: Boolean,
       default: false
+    },
+    page: {
+      type: Object,
+      default: () => ({ currentPage: 0, pageSize: 10 })
+    },
+    childrenProps: {
+      type: Object,
+      default: () => ({})
+    },
+    showFooter: {
+      type: Boolean,
+      default: true
     }
   },
-  emits: ['selectionChange'],
+  emits: ['selectionChange', 'update:page'],
   setup(props, { emit }) {
     // 当在表格选中时 el-table 可以监听 @selection-change 这个事件
     // 调用这个自定义函数（默认传入选中的数据）
@@ -89,7 +106,18 @@ export default defineComponent({
       console.log(data)
       emit('selectionChange', data)
     }
-    return { selectChange }
+
+    const handleSizeChange = (pageSize: number) => {
+      emit('update:page', { ...props.page, pageSize })
+    }
+    const handleCurrentChange = (currentPage: number) => {
+      emit('update:page', { ...props.page, currentPage })
+    }
+    return {
+      selectChange,
+      handleSizeChange,
+      handleCurrentChange
+    }
   }
 })
 </script>
