@@ -40,11 +40,11 @@ class WLRequest {
             background: 'rgba(0, 0, 0, 0.5)'
           })
         }
-        console.log('所有的实例都有的拦截器：请求成功拦截')
+        // console.log('所有的实例都有的拦截器：请求成功拦截')
         return config
       },
       (err) => {
-        console.log('所有的实例都有的拦截器：请求失败拦截')
+        // console.log('所有的实例都有的拦截器：请求失败拦截')
         return err
       }
     )
@@ -54,7 +54,7 @@ class WLRequest {
         // 移除loading 画面
         this.loading?.close()
 
-        console.log('所有的实例都有的拦截器：响应成功拦截')
+        // console.log('所有的实例都有的拦截器：响应成功拦截')
         const data = res.data
         if (data.returnCode === '-1001') {
           console.log('请求失败')

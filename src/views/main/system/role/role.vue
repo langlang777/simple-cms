@@ -16,6 +16,7 @@
     >
       <div class="menu-tree">
         <el-tree
+          ref="elTreeRef"
           :data="menus"
           show-checkbox
           node-key="id"
@@ -29,8 +30,10 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref, nextTick } from 'vue'
 import { useStore } from '@/store'
+
+import { getMenuLeafKeys } from '@/utils/map-menus'
 
 import PageContent from '@/components/page-content'
 import PageSearch from '@/components/page-search'
@@ -39,6 +42,7 @@ import PageModel from '@/components/page-model'
 import { contentTableConfig } from './config/content.config'
 import { searchFormConfig } from './config/search.config'
 import { modalConfig } from './config/modal.config'
+import { ElTree } from 'element-plus'
 
 import { usePageModel } from '@/hooks/use-page-model'
 
@@ -52,8 +56,18 @@ export default defineComponent({
   setup() {
     const pageName = 'role'
     const store = useStore()
+
+    const elTreeRef = ref<InstanceType<typeof ElTree>>()
+
+    // 处理pageModle 的 hook
+    const editCallBack = (item: any) => {
+      const leafKeys = getMenuLeafKeys(item.menuList)
+      nextTick(() => {
+        elTreeRef.value?.setCheckedKeys(leafKeys, false)
+      })
+    }
     const [handleEditData, handleNewData, pageModelRef, defaultInfo] =
-      usePageModel()
+      usePageModel(undefined, editCallBack)
 
     const menus = computed(() => store.state.entirMenu)
     const otherInfo = ref({})
@@ -77,7 +91,8 @@ export default defineComponent({
       defaultInfo,
       menus,
       otherInfo,
-      handleCheckChange
+      handleCheckChange,
+      elTreeRef
     }
   }
 })

@@ -66,9 +66,6 @@ export default defineComponent({
       dialogVisible.value = false
       if (Object.keys(props.defaultInfo).length) {
         // 编辑
-
-        console.log(Object.keys(props.defaultInfo))
-
         console.log('编辑')
 
         store.dispatch('system/editPageDataAction', {
